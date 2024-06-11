@@ -28,7 +28,7 @@ export const Wrapper = styled.div`
     .score {
         color: #fff;
         font-size: 2rem;
-        margin: 0;
+        margin: 0 0 1rem;
     }
 
     h1 {

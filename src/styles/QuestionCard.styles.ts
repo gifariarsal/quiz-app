@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
-  max-width: 1100px;
+  width: 50vw;
   background-color: #ebfeff;
   border-radius: 10px;
   border: 2px solid #0085a3;
@@ -11,6 +11,10 @@ export const Wrapper = styled.div`
 
   p {
     font-size: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    width: 80vw;
   }
 `;
 
