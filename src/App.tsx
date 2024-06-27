@@ -19,18 +19,28 @@ function App() {
   const [userAnswers, setUserAnswers] = useState<AnswerObject[]>([]);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(true);
+  const [error, setError] = useState(false);
 
   const startQuiz = async () => {
     setLoading(true);
     setGameOver(false);
+    setError(false);
 
-    const newQuestions = await fetchQuestions(TOTAL_QUESTIONS, Difficulty.EASY);
-
-    setQuestions(newQuestions);
-    setScore(0);
-    setUserAnswers([]);
-    setNumber(0);
-    setLoading(false);
+    try {
+      const newQuestions = await fetchQuestions(
+        TOTAL_QUESTIONS,
+        Difficulty.EASY
+      );
+      setQuestions(newQuestions);
+      setScore(0);
+      setUserAnswers([]);
+      setNumber(0);
+    } catch (error) {
+      console.error('Failed to start the quiz:', error);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -70,7 +80,10 @@ function App() {
         ) : null}
         {!gameOver ? <p className="score">Score: {score}</p> : null}
         {loading && <p>Loading Questions...</p>}
-        {!loading && !gameOver && (
+        {error && (
+          <p className="error">Failed to load questions. Please try again.</p>
+        )}{' '}
+        {!loading && !gameOver && !error && (
           <QuestionCard
             questionNumber={number + 1}
             totalQuestions={TOTAL_QUESTIONS}
@@ -82,6 +95,7 @@ function App() {
         )}
         {!gameOver &&
         !loading &&
+        !error &&
         userAnswers.length === number + 1 &&
         number !== TOTAL_QUESTIONS - 1 ? (
           <button className="next-btn" onClick={nextQuestion}>
